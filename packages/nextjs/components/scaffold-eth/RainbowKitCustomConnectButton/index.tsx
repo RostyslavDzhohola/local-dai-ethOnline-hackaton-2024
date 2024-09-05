@@ -38,6 +38,11 @@ export const RainbowKitCustomConnectButton = () => {
               }
 
               if (chain.unsupported || chain.id !== targetNetwork.id) {
+                console.log("Wrong network detected:", {
+                  currentChain: chain,
+                  targetNetwork: targetNetwork,
+                  userAddress: account.address, // Added user address
+                });
                 return <WrongNetworkDropdown />;
               }
 
