@@ -7,7 +7,7 @@
 
 
 - ToDos
-  - [ ] Create Web3Auth login for Scaffold-eth
+  - [x] Create Web3Auth login for Scaffold-eth
   - [ ] Create a smart contract for creating gigs marketplace
   - [ ] Create a frontend for the marketplace
   - [ ] Create simple front end for the wallet to look like Cash App, super simple send money and request money flows

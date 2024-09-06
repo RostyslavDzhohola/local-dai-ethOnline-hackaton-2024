@@ -7,9 +7,11 @@ import { createConnector as createWagmiConnector } from "wagmi";
 
 const clientId = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID as string; // get from https://dashboard.web3auth.io
 
+// This is configuration for Polygon Amoy Testnet
+// TODO: Create dynamic chain config based on target network for scaffold-eth community
 const chainConfig = {
   chainNamespace: CHAIN_NAMESPACES.EIP155,
-  chainId: "0x13882", // Please use 0x1 for Mainnet
+  chainId: "0x13882",
   rpcTarget: "https://rpc.ankr.com/polygon_amoy",
   displayName: "Polygon Amoy Testnet",
   blockExplorerUrl: "https://amoy.polygonscan.com/",
@@ -27,8 +29,8 @@ const web3AuthInstance = new Web3Auth({
   uiConfig: {
     mode: "light",
     useLogoLoader: true,
-    logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-    logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    logoLight: "https://cryptologos.cc/logos/polygon-matic-logo.png",
+    logoDark: "https://cryptologos.cc/logos/polygon-matic-logo.png",
     defaultLanguage: "en",
     theme: {
       primary: "#768729",
