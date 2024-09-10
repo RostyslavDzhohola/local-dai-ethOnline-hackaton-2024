@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAccount } from "wagmi";
 
 interface Contact {
   email: string;
@@ -17,9 +18,33 @@ export const ContactsUI: React.FC<ContactsUIProps> = ({ onContactSelected }) => 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const { address } = useAccount();
 
   const addModalRef = useRef<HTMLDivElement>(null);
   const optionsModalRef = useRef<HTMLDivElement>(null);
+
+  const loadContacts = React.useCallback(async () => {
+    try {
+      const response = await fetch("/api/contacts");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      // console.log("Contacts loaded:", data);
+      // console.log("Current address:", address);
+
+      // Filter out the contact with the same address as the current user
+      const filteredContacts = Array.isArray(data)
+        ? data.filter(contact => contact.cryptoAddress.toLowerCase() !== address?.toLowerCase())
+        : [];
+
+      // console.log("Filtered contacts:", filteredContacts);
+      setContacts(filteredContacts);
+    } catch (error) {
+      console.error("Error loading contacts:", error);
+      setContacts([]);
+    }
+  }, [address]);
 
   useEffect(() => {
     loadContacts();
@@ -41,22 +66,7 @@ export const ContactsUI: React.FC<ContactsUIProps> = ({ onContactSelected }) => 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isAddModalOpen, selectedContactIndex]);
-
-  const loadContacts = async () => {
-    try {
-      const response = await fetch("/api/contacts");
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log("Contacts loaded:", data);
-      setContacts(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error loading contacts:", error);
-      setContacts([]);
-    }
-  };
+  }, [isAddModalOpen, selectedContactIndex, loadContacts, address]);
 
   const handleAddContact = async () => {
     setValidationError(null);

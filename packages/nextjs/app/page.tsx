@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { NextPage } from "next";
 import { parseEther } from "viem";
 import { ContactsUI } from "~~/components/ui/ContactsUI";
 import { FakeUSDBalance } from "~~/components/ui/FakeUSDBalance";
+import RecentTransactions from "~~/components/ui/RecentTransactions";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { getWeb3AuthUserInfo, isWeb3AuthConnected } from "~~/services/web3/RainbowWeb3authConnector";
 
 const Home: NextPage = () => {
   const [recipientEmail, setRecipientEmail] = useState("");
@@ -39,6 +41,9 @@ const Home: NextPage = () => {
     console.log(`Selected Crypto Address: ${cryptoAddress}`);
   };
 
+  // Memoize the RecentTransactions component
+  const memoizedRecentTransactions = useMemo(() => <RecentTransactions />, []);
+
   return (
     <div className="flex min-h-screen bg-base-300 p-4">
       <div className="flex-1 flex flex-col items-center mr-4">
@@ -59,10 +64,11 @@ const Home: NextPage = () => {
 
           <div className="mb-4">
             <input
-              type="text"
+              type="number"
               placeholder="Amount"
               className="w-full p-2 border rounded bg-base-200 text-base-content placeholder-base-content/50"
               value={amount}
+              min={0}
               onChange={e => setAmount(e.target.value)}
             />
           </div>
@@ -75,13 +81,7 @@ const Home: NextPage = () => {
           </button>
         </div>
 
-        <div className="mt-8">
-          <p className="text-sm text-primary font-semibold">Recent transactions</p>
-          <div className="bg-base-100 rounded-lg shadow-md p-4 mt-2 border border-primary">
-            <p className="text-base-content">Sent $50 to user@example.com</p>
-            <p className="text-sm text-base-content/70">2 hours ago</p>
-          </div>
-        </div>
+        {memoizedRecentTransactions}
       </div>
 
       <ContactsUI onContactSelected={handleContactSelected} />

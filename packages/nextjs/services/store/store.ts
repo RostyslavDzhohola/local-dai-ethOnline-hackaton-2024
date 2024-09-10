@@ -20,6 +20,23 @@ type GlobalState = {
   setIsNativeCurrencyFetching: (newIsNativeCurrencyFetching: boolean) => void;
   targetNetwork: ChainWithAttributes;
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => void;
+  web3authUserInfo: {
+    appState: string;
+    email: string;
+    address: string;
+    aggregateVerifier: string;
+    name: string;
+    profileImage: string;
+    typeOfLogin: string;
+    verifier: string;
+    verifierId: string;
+    dappShare: string;
+    oAuthIdToken: string;
+    oAuthAccessToken: string;
+    isMfaEnabled: boolean;
+    idToken: string;
+  };
+  setWeb3AuthUserInfo: (newUserInfo: GlobalState["web3authUserInfo"]) => void;
 };
 
 export const useGlobalState = create<GlobalState>(set => ({
@@ -33,4 +50,23 @@ export const useGlobalState = create<GlobalState>(set => ({
     set(state => ({ nativeCurrency: { ...state.nativeCurrency, isFetching: newValue } })),
   targetNetwork: scaffoldConfig.targetNetworks[0],
   setTargetNetwork: (newTargetNetwork: ChainWithAttributes) => set(() => ({ targetNetwork: newTargetNetwork })),
+  // Add the web3authUserInfo property
+  web3authUserInfo: {
+    appState: "",
+    email: "",
+    address: "",
+    aggregateVerifier: "",
+    name: "",
+    profileImage: "",
+    typeOfLogin: "",
+    verifier: "",
+    verifierId: "",
+    dappShare: "",
+    oAuthIdToken: "",
+    oAuthAccessToken: "",
+    isMfaEnabled: false,
+    idToken: "",
+  },
+  // Add a setter for web3authUserInfo
+  setWeb3AuthUserInfo: (newUserInfo: GlobalState["web3authUserInfo"]) => set(() => ({ web3authUserInfo: newUserInfo })),
 }));

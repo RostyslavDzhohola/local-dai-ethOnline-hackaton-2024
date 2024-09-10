@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BanknotesIcon, Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { isWeb3AuthConnected } from "~~/services/web3/RainbowWeb3authConnector";
 
 type HeaderMenuLink = {
   label: string;
@@ -68,6 +69,21 @@ export const Header = () => {
     useCallback(() => setIsDrawerOpen(false), []),
   );
 
+  const checkWeb3AuthConnection = () => {
+    const isConnected = isWeb3AuthConnected();
+    if (isConnected) {
+      console.log("Web3Auth is connected");
+      // Perform actions for connected state
+    } else {
+      console.log("Web3Auth is not connected");
+      // Perform actions for disconnected state
+    }
+  };
+
+  useEffect(() => {
+    checkWeb3AuthConnection();
+  }, []);
+
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
       <div className="navbar-start w-auto lg:w-1/2">
@@ -106,6 +122,7 @@ export const Header = () => {
           <HeaderMenuLinks />
         </ul>
       </div>
+      {/* <div>{checkWeb3AuthConnection ? <p>Connected</p> : <p>Not Connected</p>}</div> */}
       <div className="navbar-end flex-grow mr-4">
         <RainbowKitCustomConnectButton />
         <FaucetButton />

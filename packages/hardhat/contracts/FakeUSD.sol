@@ -22,6 +22,9 @@ contract FakeUSD is ERC20, Ownable {
     // Mapping to keep track of addresses that have minted
     mapping(address => bool) private hasMinted;
 
+    // New event for tracking transfers
+    event TransferWithAddresses(address indexed from, address indexed to, uint256 value);
+
     /**
      * @dev Constructor that gives the msg.sender all of the initial supply.
      */
@@ -53,5 +56,22 @@ contract FakeUSD is ERC20, Ownable {
      */
     function hasMintedTokens(address account) external view returns (bool) {
         return hasMinted[account];
+    }
+
+    // Override the transfer function to emit our custom event
+    function transfer(address to, uint256 amount) public virtual override returns (bool) {
+        address owner = _msgSender();
+        _transfer(owner, to, amount);
+        emit TransferWithAddresses(owner, to, amount);
+        return true;
+    }
+
+    // Override the transferFrom function to emit our custom event
+    function transferFrom(address from, address to, uint256 amount) public virtual override returns (bool) {
+        address spender = _msgSender();
+        _spendAllowance(from, spender, amount);
+        _transfer(from, to, amount);
+        emit TransferWithAddresses(from, to, amount);
+        return true;
     }
 }

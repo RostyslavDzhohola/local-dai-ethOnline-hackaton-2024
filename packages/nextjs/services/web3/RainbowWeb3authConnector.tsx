@@ -1,5 +1,5 @@
 import { Wallet, WalletDetailsParams } from "@rainbow-me/rainbowkit";
-import { CHAIN_NAMESPACES, UX_MODE, WEB3AUTH_NETWORK } from "@web3auth/base";
+import { ADAPTER_STATUS, CHAIN_NAMESPACES, UX_MODE, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3Auth } from "@web3auth/modal";
 import { Web3AuthConnector } from "@web3auth/web3auth-wagmi-connector";
@@ -40,6 +40,10 @@ const web3AuthInstance = new Web3Auth({
   },
 });
 
+// Remove this line:
+// const user = await web3AuthInstance.getUserInfo();
+// console.log("user", user);
+
 export const rainbowWeb3AuthConnector = (): Wallet => ({
   id: "web3auth",
   name: "Web3auth",
@@ -56,3 +60,21 @@ export const rainbowWeb3AuthConnector = (): Wallet => ({
       ...walletDetails,
     })),
 });
+
+// Add this function to get user info after successful login
+export const getWeb3AuthUserInfo = async () => {
+  try {
+    const user = await web3AuthInstance.getUserInfo();
+    console.log("Web3Auth user:", user);
+    return user;
+  } catch (error) {
+    console.error("Error getting Web3Auth user info:", error);
+    return null;
+  }
+};
+
+// Updated function to check if Web3Auth is connected without attempting to connect
+export const isWeb3AuthConnected = (): boolean => {
+  console.log("Web3Auth status:", web3AuthInstance.status);
+  return web3AuthInstance.status === ADAPTER_STATUS.CONNECTED;
+};
